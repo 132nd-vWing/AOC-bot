@@ -19,7 +19,7 @@ version: '3'
 services:
   app:
     build:
-      INTEL-bot
+      AOC-bot
     env_file: environment.txt
     volumes:
     - ./messages.txt:/app/messages.txt:rw

@@ -1,2 +1,3 @@
 # AOC-bot
-a simple discord bot that schedules messages with role ping
+
+provide scheduled C2 messages for users or groups via a discord bot

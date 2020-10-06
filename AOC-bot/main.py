@@ -33,6 +33,7 @@ client = discord.Client()
 guild: discord.Guild
 channel: discord.TextChannel
 
+EOF = '#EOF#'
 
 # https://discord.com/oauth2/authorize?client_id=<BOT_ID_HERE>&scope=bot&permissions=134144
 @client.event
@@ -58,15 +59,28 @@ async def on_ready() -> None:
 
     with open('messages.txt', 'r') as fd:
         lines = fd.readlines()
+    expect_multiline_message = False  # check if we are in a multiline message
     for line in lines:
-        datetime_str, role_name, role_mention, message_str = line.strip().split('|')
-        message = ScheduledMessage(
-            datetime.datetime.fromisoformat(datetime_str),
-            role_name,
-            role_mention,
-            message_str
-        )
-        await schedule_message(message)
+        # new message
+        if not expect_multiline_message:
+            datetime_str, role_name, role_mention, message_str = line.strip().split('|')
+        # continuing existing message
+        else:
+            new_message_str = line.strip()
+            message_str = message_str + '\n' + new_message_str
+        # have we reached the end of the message?
+        if message_str.endswith(EOF):
+            expect_multiline_message = False
+            message_str = message_str[:-len(EOF)]
+            message = ScheduledMessage(
+                datetime.datetime.fromisoformat(datetime_str),
+                role_name,
+                role_mention,
+                message_str
+            )
+            await schedule_message(message)
+        else:
+            expect_multiline_message = True
 
 
 async def schedule_message(message: ScheduledMessage) -> bool:
@@ -156,14 +170,15 @@ async def on_message(message: discord.Message) -> None:
     # schedule the message
     # noinspection PyBroadException
     if not await schedule_message(message_to_send):
-        await message.channel.send('Could **not** schedule the message.')
+        await message.channel.send('Could **not** schedule the message. '
+                                   'Verify that the timestamp is not in the past.')
         return
     await message.channel.send('Message scheduled.')
 
     # save the message
     try:
         with open('messages.txt', 'a') as fd:
-            fd.write(f'{message_to_send.datetime}|{role.name}|{role.mention}|{content_str}\n')
+            fd.write(f'{message_to_send.datetime}|{role.name}|{role.mention}|{content_str}{EOF}\n')
     except IOError:
         await message.channel.send('Could **not** save the message.')
         return

@@ -5,3 +5,5 @@ ALLOWED_USERS = (
 
 GUILD = '132nd Virtual Wing'
 CHANNEL = 'command-and-control'
+
+IMMEDIATE_MESSAGE_OFFSET = 5

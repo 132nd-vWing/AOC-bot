@@ -140,16 +140,20 @@ async def on_message(message: discord.Message) -> None:
             return
 
     datetime_str, role_str, content_str = [part.strip() for part in message.content.split('|')]
-    if '+00:00' not in datetime_str:
-        await message.channel.send(
-            'The time string did not contain a timezone in the form of "+00:00". Rejecting message.'
-        )
-        return
-    try:
-        timestamp = datetime.datetime.fromisoformat(datetime_str)
-    except ValueError:
-        await message.channel.send('Could not parse the date and time. Please check.')
-        return
+    if 'now' in datetime_str.lower():
+        timestamp = datetime.datetime.now(tz=datetime.timezone.utc) + \
+                datetime.timedelta(seconds=config.IMMEDIATE_MESSAGE_OFFSET)
+    else:
+        if '+00:00' not in datetime_str:
+            await message.channel.send(
+                'The time string did not contain a timezone in the form of "+00:00". Rejecting message.'
+            )
+            return
+        try:
+            timestamp = datetime.datetime.fromisoformat(datetime_str)
+        except ValueError:
+            await message.channel.send('Could not parse the date and time. Please check.')
+            return
 
     for role in guild.roles:
         if role.name == role_str:

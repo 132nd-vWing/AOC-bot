@@ -24,7 +24,7 @@ help_message = f""" To schedule a message for the server {config.GUILD}, send me
 <date and time> | <role> | <message>
 ```
 
-- `<date and time>`: *Must* be ISO formatted, and contain date, time and timezone (see example). Currently, only UTC is supported. 
+- `<date and time>`: Must either be `now`, or be ISO formatted, and then contain date, time and timezone (see example). Currently, only UTC is supported.
 - `<role>`: This role must exist on the server. When the message is delivered, the role will be pinged.
 - `<message>`: This message will be forwarded *as is* to the channel `{config.CHANNEL}`, and therefore supports all of discord's formatting options.
 
@@ -34,8 +34,12 @@ When I have received your message, I will report back with how the message will 
 
 Scheduled messages can't be removed at this time. Triple-check the messages before submitting them to me.
 
-Example:
+Example 1:
 ```
 2020-09-28 18:30+00:00 | Bot admin | This is a super-important message that warrants pinging some guys at a certain time.
+```
+Example 2:
+```
+now | OPAR Controller | There is an active incursion in neutral territory going on.
 ```
 """

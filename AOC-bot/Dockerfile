@@ -15,7 +15,11 @@ RUN apk update && \
             gcc && \
     pip install -r requirements.txt && \
     rm requirements.txt && \
-    apk del --rdepends --purge gcc musl-dev python3-dev py3-pip
+    apk del --rdepends --purge \
+            gcc \
+            musl-dev \
+            python3-dev \
+            py3-pip
 
 ADD *.py /app/
 

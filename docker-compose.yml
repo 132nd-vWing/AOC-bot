@@ -24,3 +24,5 @@ services:
     volumes:
     - ./messages.txt:/app/messages.txt:rw
     restart: unless-stopped
+    cap_drop:
+      - ALL

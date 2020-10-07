@@ -21,6 +21,8 @@ RUN apk update && \
             python3-dev \
             py3-pip
 
+USER nobody
+
 ADD *.py /app/
 
 CMD ["python3", "main.py"]

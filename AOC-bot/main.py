@@ -88,7 +88,7 @@ async def schedule_message(message: ScheduledMessage) -> bool:
     # check if message is already in the past
     if message.datetime < now:
         return False
-    delta = (message.datetime - now).total_seconds
+    delta = (message.datetime - now).total_seconds()
     asyncio.create_task(wait_and_send_message(delta, message.message))
     return True
 

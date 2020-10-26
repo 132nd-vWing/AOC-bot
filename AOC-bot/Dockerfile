@@ -1,5 +1,8 @@
 FROM alpine:3.12
 
+ARG GIT_HASH
+ENV GIT_HASH=${GIT_HASH:-dev}
+
 WORKDIR /app
 COPY requirements.txt /app/
 

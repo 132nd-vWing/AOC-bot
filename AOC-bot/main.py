@@ -123,9 +123,8 @@ async def on_message(message: discord.Message) -> None:
 
     if content_lower.startswith('version'):
         try:
-            with open('version.txt') as fd:
-                await message.channel.send('```' + fd.read() + '```')
-        except FileNotFoundError:
+            await message.channel.send('```' + os.environ['GIT_HASH'] + '```')
+        except KeyError:
             await message.channel.send('Could not determine version.')
         finally:
             return
